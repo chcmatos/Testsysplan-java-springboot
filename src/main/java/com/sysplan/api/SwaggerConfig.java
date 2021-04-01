@@ -16,18 +16,28 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     @Bean
-    public Docket docket() {
+    public Docket docketApiV1() {
+        return docket("v1");
+    }
+
+    @Bean
+    public Docket docketApiV2() {
+        return docket("v2");
+    }
+
+    private Docket docket(String version) {
         String basePackage = SwaggerConfig.class.getPackage().getName();
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .groupName("api-"+version)
+                .apiInfo(apiInfo(version))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(basePackage))
+                .apis(RequestHandlerSelectors.basePackage(basePackage + "." + version))
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false);
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo(String version){
         return new ApiInfoBuilder()
                 .title("Sysplan Test API")
                 .description("A simple usage example of Java Springboot Web API")
@@ -35,7 +45,7 @@ public class SwaggerConfig {
                         "Carlos Matos",
                         "https://www.youracclaim.com/users/chcmatos/badges",
                         "chcmatos@gmail.com"))
-                .version("v1")
+                .version(version)
                 .build();
     }
 
