@@ -1,0 +1,41 @@
+version: '3.6'
+
+services:
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./dockervol/mongodb:/data/db
+    networks:
+      - mongo-network
+
+  springboot_sysplan_api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: springboot_sysplan/api
+    container_name: springboot_sysplan_api
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - ADDITIONAL_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xmx1G -Xms128m -XX:MaxMetaspaceSize=128m
+      - PROFILE=dev
+    networks:
+      - mongo-network
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+
+networks:
+  mongo-network:
+    driver: bridge
+
+volumes:
+  dockervol:
+    driver: local
