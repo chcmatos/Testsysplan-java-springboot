@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public final class ClientDTO {
 
     @Getter
     @NotNull
+    @NotEmpty
     @ApiModelProperty(value= "Client name")
     private final String name;
 

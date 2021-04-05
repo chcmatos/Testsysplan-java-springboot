@@ -5,6 +5,7 @@ import java.util.List;
 public interface CrudService<M, ID> {
 
     int FIND_ALL_LIMIT = 300;
+    int PAGING_DEFAULT_LIMIT = 100;
 
     List<M> list();
 

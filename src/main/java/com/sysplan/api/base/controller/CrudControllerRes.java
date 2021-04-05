@@ -1,9 +1,9 @@
 package com.sysplan.api.base.controller;
 
-import com.sysplan.api.base.controller.dto.DTOResourceAssemblerSupport;
-import com.sysplan.api.base.model.ModelBase;
+import com.sysplan.api.base.controller.dto.ResourceAssemblerSupport;
 import com.sysplan.api.base.service.CrudService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
@@ -17,12 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAssembler extends DTOResourceAssemblerSupport<Res, M>, S extends CrudService<M, ID>> {
+public abstract class CrudControllerRes<M, ID, Res, ResAssembler extends ResourceAssemblerSupport<Res, M>, S extends CrudService<M, ID>> {
 
-    protected final int PAGING_DEFAULT_LIMIT = 100;
-
-    private final S service;
-    private final ResAssembler resAssembler;
+    protected final S service;
+    protected final ResAssembler resAssembler;
 
     @GetMapping
     @ApiOperation("list all values (limited to 300 registers)")
@@ -49,8 +47,9 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
                     @ApiResponse(code = 204, message = "No Content"),
             }
     )
-    public ResponseEntity<List<Res>> paging(@PathVariable int page, @PathVariable(required = false) Integer limit) {
-        var list = service.paging(page, limit != null ? limit : PAGING_DEFAULT_LIMIT);
+    public ResponseEntity<List<Res>> paging(@ApiParam(value = "current page index starting in 0") @PathVariable int page,
+                                            @ApiParam(value = "result limit count, whether 0 or less default value (100) will be used.") @PathVariable(required = false) Integer limit) {
+        var list = service.paging(page, limit);
         return list.isEmpty() ?
                 ResponseEntity.status(HttpStatus.NO_CONTENT).build() :
                 ResponseEntity.ok(list.stream()

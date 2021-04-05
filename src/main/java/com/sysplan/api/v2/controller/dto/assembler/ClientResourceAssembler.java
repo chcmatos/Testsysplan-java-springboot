@@ -1,12 +1,12 @@
 package com.sysplan.api.v2.controller.dto.assembler;
 
-import com.sysplan.api.base.controller.dto.DTOResourceAssemblerSupport;
+import com.sysplan.api.base.controller.dto.ResourceAssemblerSupport;
 import com.sysplan.api.model.Client;
 import com.sysplan.api.v2.controller.dto.ClientDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ClientResourceAssembler extends DTOResourceAssemblerSupport<ClientDTO, Client> {
+public final class ClientResourceAssembler implements ResourceAssemblerSupport<ClientDTO, Client> {
 
     @Override
     public ClientDTO toResource(Client model) {

@@ -17,8 +17,7 @@ public class Client extends ModelBaseUuid {
     @NotBlank(message = "Name is mandatory")
     private String name;
 
-    @NotBlank(message = "Age is mandatory")
-    @Min(1)
+    @Min(18)
     @Max(199)
     private short age;
 
