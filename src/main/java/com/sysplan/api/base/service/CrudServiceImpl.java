@@ -51,7 +51,7 @@ public abstract class CrudServiceImpl<M extends ModelBase<ID>, ID, R extends Pag
 
     @Override
     public List<M> paging(int page, int size) {
-        Pageable limit = PageRequest.of(page, size);
+        Pageable limit = PageRequest.of(Math.max(page, 0), size > 0 ? size : PAGING_DEFAULT_LIMIT);
         var res = repository.findAll(limit);
         return res.toList();
     }

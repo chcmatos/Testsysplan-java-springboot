@@ -49,7 +49,7 @@ public abstract class CrudControllerRes<M, ID, Res, ResAssembler extends Resourc
     )
     public ResponseEntity<List<Res>> paging(@ApiParam(value = "current page index starting in 0") @PathVariable int page,
                                             @ApiParam(value = "result limit count, whether 0 or less default value (100) will be used.") @PathVariable(required = false) Integer limit) {
-        var list = service.paging(page, limit);
+        var list = service.paging(page, limit == null ? 0 : limit);
         return list.isEmpty() ?
                 ResponseEntity.status(HttpStatus.NO_CONTENT).build() :
                 ResponseEntity.ok(list.stream()
