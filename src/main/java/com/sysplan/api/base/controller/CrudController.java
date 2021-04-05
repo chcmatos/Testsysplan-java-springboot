@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -54,7 +55,6 @@ public abstract class CrudController<M extends ModelBase<ID>, ID, S extends Crud
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("recover a value by id")
     @ApiResponses(
             value = {
@@ -62,21 +62,33 @@ public abstract class CrudController<M extends ModelBase<ID>, ID, S extends Crud
                     @ApiResponse(code = 400, message = "Bad Request"),
             }
     )
-    public M get(@PathVariable ID id) {
-        return service.getById(id);
+    public ResponseEntity<M> get(@PathVariable ID id) {
+        try {
+            var model = service.getById(id);
+            return model != null ?
+                    ResponseEntity.ok(model) :
+                    ResponseEntity.notFound().build();
+        } catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("insert a new register")
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 201, message = "Created"),
+                    @ApiResponse(code = 200, message = "Ok"),
                     @ApiResponse(code = 400, message = "Bad Request"),
             }
     )
-    public M save(@RequestBody M model) {
-        return service.save(model);
+    public ResponseEntity<M> save(@RequestBody M model) {
+        try {
+            return ResponseEntity.ok(service.save(model));
+        } catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @PutMapping
@@ -89,7 +101,12 @@ public abstract class CrudController<M extends ModelBase<ID>, ID, S extends Crud
             }
     )
     public void update(@RequestBody M model) {
-        service.update(model);
+        try {
+            service.update(model);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @DeleteMapping
@@ -102,7 +119,12 @@ public abstract class CrudController<M extends ModelBase<ID>, ID, S extends Crud
             }
     )
     public void delete(@RequestBody M model) {
-        service.delete(model);
+        try {
+            service.delete(model);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -115,6 +137,11 @@ public abstract class CrudController<M extends ModelBase<ID>, ID, S extends Crud
             }
     )
     public void deleteById(@PathVariable ID id) {
-        service.deleteById(id);
+        try {
+            service.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 }

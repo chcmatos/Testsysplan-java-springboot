@@ -58,8 +58,7 @@ public abstract class CrudServiceImpl<M extends ModelBase<ID>, ID, R extends Pag
 
     @Override
     public M getById(ID id) {
-        return repository.findById(requireNonNull(id))
-                .orElseThrow(() -> new RuntimeException(clazz.getSimpleName() + " Not found!"));
+        return repository.findById(requireNonNull(id)).orElse(null);
     }
 
     @Override

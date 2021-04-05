@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -58,30 +59,44 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("recover a value by id")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "OK"),
                     @ApiResponse(code = 400, message = "Bad Request"),
+                    @ApiResponse(code = 404, message = "Not Found"),
             }
     )
-    public Res get(@PathVariable ID id) {
-        return resAssembler.toResource(service.getById(id));
+    public ResponseEntity<Res> get(@PathVariable ID id) {
+        try {
+            var model = service.getById(id);
+            return model != null ?
+                    ResponseEntity.ok(resAssembler.toResource(model)) :
+                    ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("insert a new register")
     @ApiResponses(
             value = {
-                    @ApiResponse(code = 201, message = "Created"),
+                    @ApiResponse(code = 200, message = "Ok"),
                     @ApiResponse(code = 400, message = "Bad Request"),
             }
     )
-    public M save(@Valid @RequestBody Res body) {
-        M model = resAssembler.toDomain(body);
-        return service.save(model);
+    public ResponseEntity<Res> save(@Valid @RequestBody Res body) {
+        try {
+            M model = resAssembler.toDomain(body);
+            model = service.save(model);
+            return ResponseEntity.ok(resAssembler.toResource(model));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ex.getMessage(), ex);
+        }
     }
 
     @PutMapping
@@ -90,12 +105,17 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
     @ApiResponses(
             value = {
                     @ApiResponse(code = 202, message = "Accepted"),
-                    @ApiResponse(code = 400, message = "Bad Request"),
+                    @ApiResponse(code = 400, message = "Bad Request")
             }
     )
     public void update(@Valid @RequestBody Res body) {
-        M model = resAssembler.toDomain(body);
-        service.update(model);
+        try {
+            M model = resAssembler.toDomain(body);
+            service.update(model);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
     }
 
     @DeleteMapping
@@ -108,8 +128,13 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
             }
     )
     public void delete(@RequestBody Res body) {
-        M model = resAssembler.toDomain(body);
-        service.delete(model);
+        try {
+            M model = resAssembler.toDomain(body);
+            service.delete(model);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -122,7 +147,12 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
             }
     )
     public void deleteById(@PathVariable ID id) {
-        service.deleteById(id);
+        try {
+            service.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
     }
 
 }
