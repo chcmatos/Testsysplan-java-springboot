@@ -17,14 +17,14 @@ public final class ClientDTO {
     private final UUID id;
 
     @Getter
-    @ApiModelProperty(value= "Client name")
     @NotNull
+    @ApiModelProperty(value= "Client name")
     private final String name;
 
     @Getter
-    @ApiModelProperty(value= "Client age")
     @Min(18)
     @Max(199)
+    @ApiModelProperty(value= "Client age")
     private final short age;
 
 }

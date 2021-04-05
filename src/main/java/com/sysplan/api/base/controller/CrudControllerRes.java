@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
                     @ApiResponse(code = 400, message = "Bad Request"),
             }
     )
-    public M save(@RequestBody Res body) {
+    public M save(@Valid @RequestBody Res body) {
         M model = resAssembler.toDomain(body);
         return service.save(model);
     }
@@ -92,7 +93,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
                     @ApiResponse(code = 400, message = "Bad Request"),
             }
     )
-    public void update(@RequestBody Res body) {
+    public void update(@Valid @RequestBody Res body) {
         M model = resAssembler.toDomain(body);
         service.update(model);
     }
