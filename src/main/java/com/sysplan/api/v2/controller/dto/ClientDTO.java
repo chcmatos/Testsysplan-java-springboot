@@ -1,6 +1,5 @@
 package com.sysplan.api.v2.controller.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;

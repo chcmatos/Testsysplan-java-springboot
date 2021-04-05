@@ -23,7 +23,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
     private final ResAssembler resAssembler;
 
     @GetMapping
-    @ApiOperation("list all clients (limited to 300 registers)")
+    @ApiOperation("list all values (limited to 300 registers)")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "Ok"),
@@ -40,7 +40,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
     }
 
     @GetMapping("/paging/{page}/{limit}")
-    @ApiOperation("list clients by paging, page index from 0 until n, limiting by page request.")
+    @ApiOperation("list values by paging, page index from 0 until n, limiting count by page request.")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "Ok"),
@@ -58,7 +58,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("recover a client by id")
+    @ApiOperation("recover a value by id")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "OK"),
@@ -71,7 +71,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("insert a new client")
+    @ApiOperation("insert a new register")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 201, message = "Created"),
@@ -85,7 +85,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
 
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @ApiOperation("update a existing client")
+    @ApiOperation("update a existing register")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 202, message = "Accepted"),
@@ -99,7 +99,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("remove target client")
+    @ApiOperation("remove target value")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "OK"),
@@ -113,7 +113,7 @@ public abstract class CrudControllerRes<M extends ModelBase<ID>, ID, Res, ResAss
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("remove target client by id")
+    @ApiOperation("remove target value by id")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "OK"),
